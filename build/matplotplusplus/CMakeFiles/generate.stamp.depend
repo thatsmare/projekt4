@@ -1,0 +1,12 @@
+# CMake generation dependency list for this directory.
+C:/Users/marty/Documents/GitHub/projekt4/matplotplusplus/CMakeLists.txt
+C:/Users/marty/Documents/GitHub/projekt4/matplotplusplus/cmake/functions.cmake
+C:/Users/marty/Documents/GitHub/projekt4/matplotplusplus/cmake/functions/link_external_libraries.cmake
+C:/Users/marty/Documents/GitHub/projekt4/matplotplusplus/cmake/functions/project_flags.cmake
+C:/Users/marty/Documents/GitHub/projekt4/matplotplusplus/cmake/functions/sanitizers.cmake
+C:/Users/marty/Documents/GitHub/projekt4/matplotplusplus/cmake/functions/target_options.cmake
+C:/mingw64/share/cmake-3.28/Modules/CMakePackageConfigHelpers.cmake
+C:/mingw64/share/cmake-3.28/Modules/ExternalProject/shared_internal_commands.cmake
+C:/mingw64/share/cmake-3.28/Modules/FetchContent.cmake
+C:/mingw64/share/cmake-3.28/Modules/GNUInstallDirs.cmake
+C:/mingw64/share/cmake-3.28/Modules/WriteBasicConfigVersionFile.cmake

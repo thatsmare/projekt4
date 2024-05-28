@@ -1,0 +1,8 @@
+# CMake generation dependency list for this directory.
+C:/Users/marty/Documents/GitHub/projekt4/matplotplusplus/cmake/FindFilesystem.cmake
+C:/Users/marty/Documents/GitHub/projekt4/matplotplusplus/source/matplot/CMakeLists.txt
+C:/mingw64/share/cmake-3.28/Modules/CMakePushCheckState.cmake
+C:/mingw64/share/cmake-3.28/Modules/CheckCXXSourceRuns.cmake
+C:/mingw64/share/cmake-3.28/Modules/CheckIncludeFileCXX.cmake
+C:/mingw64/share/cmake-3.28/Modules/CheckSymbolExists.cmake
+C:/mingw64/share/cmake-3.28/Modules/Internal/CheckSourceRuns.cmake

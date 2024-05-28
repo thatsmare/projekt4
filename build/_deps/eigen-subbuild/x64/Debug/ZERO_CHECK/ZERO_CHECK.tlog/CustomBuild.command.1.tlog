@@ -1,0 +1,10 @@
+^C:\USERS\MARTY\DOCUMENTS\GITHUB\PROJEKT4\BUILD\_DEPS\EIGEN-SUBBUILD\CMAKEFILES\D9AE1C170A4B4808433D41EE5C7EC9DD\GENERATE.STAMP.RULE
+setlocal
+C:\mingw64\bin\cmake.exe -SC:/Users/marty/Documents/GitHub/projekt4/build/_deps/eigen-subbuild -BC:/Users/marty/Documents/GitHub/projekt4/build/_deps/eigen-subbuild --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/marty/Documents/GitHub/projekt4/build/_deps/eigen-subbuild/eigen-populate.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
