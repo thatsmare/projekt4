@@ -110,6 +110,9 @@ int main(int argc, char* args[])
                      std::cout << "Drone position: " << goal_state << "Mouse state: " << x  << ' '<< y <<std::endl;
                     
                 }
+                else{
+                    //sth to make it stop we need
+                }
                
             }
 
