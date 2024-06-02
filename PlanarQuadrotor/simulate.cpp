@@ -87,18 +87,21 @@ int main(int argc, char* args[])
                 {
                     quit = true;
                 }
-               /* else if (e.type == SDL_MOUSEMOTION)
+                else if (e.type == SDL_MOUSEMOTION)
                 {
 
                     SDL_GetMouseState(&x, &y);
                    // std::cout << "Mouse position: (" << x << ", " << y << ")" << std::endl;
                 }
-                */
+               
                 else if(e.type == SDL_MOUSEBUTTONUP){
                 
                      SDL_GetMouseState(&x, &y);
 
-                    goal_state << x, y, 0, 0, 0, 0;
+                     x = x/SCREEN_WIDTH*2 + SCREEN_WIDTH/2;
+                     y =y/SCREEN_HEIGHT*2 + SCREEN_HEIGHT/2;
+
+                    goal_state << x, y , 0, 0, 0, 0;
                 
                      quadrotor.SetGoal(goal_state);
 
