@@ -160,10 +160,6 @@
 	[
 		{
 			"backtrace" : 3,
-			"id" : "SDL2::@e7c329919722962a2ad4"
-		},
-		{
-			"backtrace" : 3,
 			"id" : "nodesoup::@c12dc8f6f399c06ad5fb"
 		},
 		{
@@ -173,6 +169,10 @@
 		{
 			"backtrace" : 2,
 			"id" : "SDL2main::@e7c329919722962a2ad4"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "SDL2::@e7c329919722962a2ad4"
 		},
 		{
 			"backtrace" : 3,

@@ -92,15 +92,18 @@ int main(int argc, char* args[])
                     SDL_GetMouseState(&x, &y);
                     std::cout << "Mouse position: (" << x << ", " << y << ")" << std::endl;
                 }
-                else if(e.type == SDL_MOUSEBUTTONDOWN){
-                     SDL_GetMouseState(&x, &y);
-                     float world_x = static_cast<float>(x) / SCREEN_WIDTH * 2.0f - 1.0f; // Example transformation
-                     float world_y = static_cast<float>(SCREEN_HEIGHT - y) / SCREEN_HEIGHT * 2.0f - 1.0f; // Example transformation
-
-                    goal_state << world_x, world_y, 0, 0, 0, 0;
-                    quadrotor.SetGoal(goal_state);
-                }
+                else if(e.type == SDL_MOUSEBUTTONUP){
                 
+                     SDL_GetMouseState(&x, &y);
+
+                     int output_x = static_cast<int>(x/SCREEN_WIDTH *10.0f);
+                     int output_y = static_cast<int>((SCREEN_HEIGHT-y)/SCREEN_HEIGHT * 10.0f);
+
+                     goal_state << output_x, output_y, 0, 0, 0, 0;
+                     quadrotor.SetGoal(goal_state);
+                    
+                }
+               
             }
 
             SDL_Delay((int) dt * 1000);
