@@ -98,8 +98,8 @@ int main(int argc, char* args[])
                 
                      SDL_GetMouseState(&x, &y);
 
-                     x = x/SCREEN_WIDTH*2 + SCREEN_WIDTH/2;
-                     y =y/SCREEN_HEIGHT*2 + SCREEN_HEIGHT/2;
+                    x= (x-SCREEN_WIDTH/2)*SCREEN_WIDTH/2;    
+                    y= (y-SCREEN_HEIGHT/2)*SCREEN_HEIGHT/2; 
 
                     goal_state << x, y , 0, 0, 0, 0;
                 
