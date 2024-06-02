@@ -20,8 +20,8 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
     q_y = state[1];
     q_theta = state[2];
 
-    float image_x = q_x/SCREEN_WIDTH*2 + SCREEN_WIDTH/2;
-    float image_y = q_y/SCREEN_HEIGHT*2 + SCREEN_HEIGHT/2;
+   float image_x = q_x/SCREEN_WIDTH*2 + SCREEN_WIDTH/2;
+   float image_y = q_y/SCREEN_HEIGHT*2 + SCREEN_HEIGHT/2;
 
 
     SDL_SetRenderDrawColor(gRenderer.get(), 0xFF, 0x00, 0x00, 0xFF);

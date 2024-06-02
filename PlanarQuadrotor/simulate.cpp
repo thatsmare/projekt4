@@ -15,7 +15,9 @@ Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {
     Eigen::MatrixXf K = Eigen::MatrixXf::Zero(6, 6);
     Eigen::Vector2f input = quadrotor.GravityCompInput();
 
-    Q.diagonal() << 10, 10, 10, 1, 10, 0.25 / 2 / M_PI;
+  //  Q.diagonal() << 10, 10, 10, 1, 10, 0.25 / 2 / M_PI;  ORIGINAL
+   
+    Q.diagonal() << 20, 20, 20, 20, 20, 0.25 / 2 / M_PI;
     R.row(0) << 0.1, 0.05;
     R.row(1) << 0.05, 0.1;
 
@@ -54,7 +56,7 @@ int main(int argc, char* args[])
      * For implemented LQR controller, it has to be [x, y, 0, 0, 0, 0]
     */
     Eigen::VectorXf goal_state = Eigen::VectorXf::Zero(6);
-    goal_state << -1, 7, 0, 0, 0, 0;
+    goal_state << 0, 0, 0, 0, 0, 0;
     quadrotor.SetGoal(goal_state);
     /* Timestep for the simulation */
     const float dt = 0.001;
@@ -98,10 +100,10 @@ int main(int argc, char* args[])
                 
                      SDL_GetMouseState(&x, &y);
 
-                    x= (x-SCREEN_WIDTH/2)*SCREEN_WIDTH/2;    
-                    y= (y-SCREEN_HEIGHT/2)*SCREEN_HEIGHT/2; 
+                   float f_x= static_cast<float>((x-SCREEN_WIDTH/2)*SCREEN_WIDTH/2);    
+                   float f_y= static_cast<float>((y-SCREEN_HEIGHT/2)*SCREEN_HEIGHT/2); 
 
-                    goal_state << x, y , 0, 0, 0, 0;
+                    goal_state << f_x, f_y , 0, 0, 0, 0;
                 
                      quadrotor.SetGoal(goal_state);
 
