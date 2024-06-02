@@ -38,6 +38,9 @@ int main(int argc, char* args[])
     const int SCREEN_WIDTH = 1280;
     const int SCREEN_HEIGHT = 720;
 
+    float max_image_x = 10.0;
+    
+    float image_scale = SCREEN_WIDTH/max_image_x/2;
     /**
      * TODO: Extend simulation
      * 1. Set goal state of the mouse when clicking left mouse button (transform the coordinates to the quadrotor world! see visualizer TODO list)
@@ -86,21 +89,25 @@ int main(int argc, char* args[])
                 {
                     quit = true;
                 }
-                else if (e.type == SDL_MOUSEMOTION)
+               /* else if (e.type == SDL_MOUSEMOTION)
                 {
 
                     SDL_GetMouseState(&x, &y);
-                    std::cout << "Mouse position: (" << x << ", " << y << ")" << std::endl;
+                   // std::cout << "Mouse position: (" << x << ", " << y << ")" << std::endl;
                 }
+                */
                 else if(e.type == SDL_MOUSEBUTTONUP){
                 
                      SDL_GetMouseState(&x, &y);
 
-                     int output_x = static_cast<int>(x/SCREEN_WIDTH *10.0f);
-                     int output_y = static_cast<int>((SCREEN_HEIGHT-y)/SCREEN_HEIGHT * 10.0f);
+                   float output_x = (static_cast<float>(x/image_scale) + SCREEN_WIDTH/2)*(-1)  ;
+                   float output_y = (SCREEN_HEIGHT/2 + static_cast<float>(y/ image_scale))  ;
 
                      goal_state << output_x, output_y, 0, 0, 0, 0;
+                  // goal_state << 5, 5, 0, 0, 0, 0;
                      quadrotor.SetGoal(goal_state);
+
+                     std::cout << "Drone position: " << goal_state << "Mouse state: " << x  << ' '<< y <<std::endl;
                     
                 }
                
