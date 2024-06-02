@@ -94,10 +94,11 @@ int main(int argc, char* args[])
                 }
                 else if(e.type == SDL_MOUSEBUTTONDOWN){
                      SDL_GetMouseState(&x, &y);
+                     float world_x = static_cast<float>(x) / SCREEN_WIDTH * 2.0f - 1.0f; // Example transformation
+                     float world_y = static_cast<float>(SCREEN_HEIGHT - y) / SCREEN_HEIGHT * 2.0f - 1.0f; // Example transformation
 
-                     goal_state << x, y, 0, 0, 0, 0;
-                     quadrotor.SetGoal(goal_state);
-
+                    goal_state << world_x, world_y, 0, 0, 0, 0;
+                    quadrotor.SetGoal(goal_state);
                 }
                 
             }
