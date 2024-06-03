@@ -1,4 +1,5 @@
 #include "planar_quadrotor_visualizer.h"
+#include <iostream>
 
 PlanarQuadrotorVisualizer::PlanarQuadrotorVisualizer(PlanarQuadrotor *quadrotor_ptr): quadrotor_ptr(quadrotor_ptr) {}
 
@@ -20,10 +21,12 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
     q_y = state[1];
     q_theta = state[2];
 
-   float image_x = q_x/SCREEN_WIDTH*2 + SCREEN_WIDTH/2;
-   float image_y = q_y/SCREEN_HEIGHT*2 + SCREEN_HEIGHT/2;
+//    std::cout << q_x  << " , " << q_y << std::endl;
+
+   //float image_x = q_x/SCREEN_WIDTH*2 + SCREEN_WIDTH/2;                 //added
+   //float image_y = q_y/SCREEN_HEIGHT*2 + SCREEN_HEIGHT/2;               //added
 
 
     SDL_SetRenderDrawColor(gRenderer.get(), 0xFF, 0x00, 0x00, 0xFF);
-    filledCircleColor(gRenderer.get(), image_x, image_y, 30, 0xFF0000FF);
+    filledCircleColor(gRenderer.get(), q_x + 640, q_y+360, 30, 0xFF0000FF);
 }
