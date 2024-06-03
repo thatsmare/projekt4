@@ -28,5 +28,5 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
 
 
     SDL_SetRenderDrawColor(gRenderer.get(), 0xFF, 0x00, 0x00, 0xFF);
-    filledCircleColor(gRenderer.get(), q_x + 640, q_y+360, 30, 0xFF0000FF);
+    filledCircleColor(gRenderer.get(), q_x + 640, q_y+360, 30, 0xFF0000FF);         //added 640, 360
 }
