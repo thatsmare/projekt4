@@ -103,8 +103,8 @@ int main(int argc, char* args[])
                      SDL_GetMouseState(&x, &y);                                                                                             
 
 
-                  //  goal_state << 80, -100, 0, 0, 0, 0;
-                    goal_state << x, y, 0, 0, 0, 0;
+                   goal_state << 80, -100, 0, 0, 0, 0;
+                   // goal_state << x, y, 0, 0, 0, 0;
 
                      quadrotor.SetGoal(goal_state);
 

@@ -531,6 +531,9 @@ SDL2_gfx_IS_TOP_LEVEL:STATIC=OFF
 //Value Computed by CMake
 SDL2_gfx_SOURCE_DIR:STATIC=C:/Users/marty/Documents/GitHub/projekt4/SDL2_gfx
 
+//The directory containing a CMake configuration file for SDL2_image.
+SDL2_image_DIR:PATH=SDL2_image_DIR-NOTFOUND
+
 //Dependencies for the target
 SDL2main_LIB_DEPENDS:STATIC=general;shell32;
 
