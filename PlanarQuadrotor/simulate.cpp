@@ -19,9 +19,9 @@ Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {
    //R.row(0) << 0.1, 0.05;
     //R.row(1) << 0.05, 0.1;
    
-    Q.diagonal() << 30, 30, 30, 30, 30, 10 / 2 / M_PI;
-    R.row(0) << 0.3, 0.15;
-    R.row(1) << 0.15, 0.3;
+    Q.diagonal() << 10, 10, 10, 10, 10, 0.25 / 2 / M_PI;
+    R.row(0) << 0.10, 0.05;
+    R.row(1) << 0.05, 0.10;
 
     std::tie(A, B) = quadrotor.Linearize();
     A_discrete = Eye + dt * A;
@@ -102,11 +102,10 @@ int main(int argc, char* args[])
                                                                                                                                            
                      SDL_GetMouseState(&x, &y);                                                                                             
 
-                 //  float f_x= static_cast<float>((x-SCREEN_WIDTH/2)*SCREEN_WIDTH/2);                                                        
-                  // float f_y= static_cast<float>((y-SCREEN_HEIGHT/2)*SCREEN_HEIGHT/2); 
 
-                    goal_state << x - 640, y-360, 0, 0, 0, 0;
-                
+                  //  goal_state << 80, -100, 0, 0, 0, 0;
+                    goal_state << x, y, 0, 0, 0, 0;
+
                      quadrotor.SetGoal(goal_state);
 
                      std::cout << "Drone position: "<< goal_state << "Mouse state: " << x  << ' '<< y <<std::endl;
