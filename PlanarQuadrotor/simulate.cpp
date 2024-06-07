@@ -103,12 +103,12 @@ int main(int argc, char* args[])
                      SDL_GetMouseState(&x, &y);                                                                                             
 
 
-                   goal_state << 80, -100, 0, 0, 0, 0;
-                   // goal_state << x, y, 0, 0, 0, 0;
+                   //goal_state << 80, -100, 0, 0, 0, 0;
+                   goal_state << x-SCREEN_WIDTH/2, y-SCREEN_HEIGHT/2, 0, 0, 0, 0;
 
                      quadrotor.SetGoal(goal_state);
 
-                     std::cout << "Drone position: "<< goal_state << "Mouse state: " << x  << ' '<< y <<std::endl;
+                     std::cout << "Drone position: "<< goal_state << "Mouse state: " << x +SCREEN_WIDTH/2  << ' '<< y + SCREEN_HEIGHT/2 <<std::endl;
                     
                 }
                

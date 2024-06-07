@@ -26,8 +26,8 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
    //float image_x = q_x/SCREEN_WIDTH*2 + SCREEN_WIDTH/2;                 //added
    //float image_y = q_y/SCREEN_HEIGHT*2 + SCREEN_HEIGHT/2;               //added
 
-    std::cout << q_x << "  ";
-    std::cout << q_y << std::endl;
+    //std::cout << q_x << "  ";
+  //  std::cout << q_y << std::endl;
 /*
      std::cout << q_x + 640<< "  ";
     std::cout << q_y + 360<< std::endl;
