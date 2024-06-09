@@ -5,7 +5,7 @@
 		"commands" : [],
 		"files" : 
 		[
-			"SDL/CMakeLists.txt"
+			"CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -17,10 +17,16 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "SDL2main::@e7c329919722962a2ad4"
+			"id" : "planar_quadrotor::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+			"id" : "nodesoup::@c12dc8f6f399c06ad5fb"
+		},
+		{
+			"id" : "matplot::@900000785becdfd3715c"
+		},
+		{
+			"id" : "SDL2main::@e7c329919722962a2ad4"
 		},
 		{
 			"id" : "SDL2::@e7c329919722962a2ad4"
@@ -30,15 +36,21 @@
 		},
 		{
 			"id" : "SDL2_test::@e7c329919722962a2ad4"
+		},
+		{
+			"id" : "SDL2_gfx::@2c7becf580f3cc8d05f2"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "ALL_BUILD::@e7c329919722962a2ad4",
+	"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
 	"isGeneratorProvided" : true,
 	"name" : "ALL_BUILD",
 	"paths" : 
 	{
-		"build" : "SDL",
-		"source" : "SDL"
+		"build" : ".",
+		"source" : "."
 	},
 	"sources" : [],
 	"type" : "UTILITY"

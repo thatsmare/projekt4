@@ -21,26 +21,16 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
     q_y = state[1];
     q_theta = state[2];
 
-//    std::cout << q_x  << " , " << q_y << std::endl;
+     //std::cout << q_x  << " , " << q_y << std::endl;
 
-   //float image_x = q_x/SCREEN_WIDTH*2 + SCREEN_WIDTH/2;                 //added
-   //float image_y = q_y/SCREEN_HEIGHT*2 + SCREEN_HEIGHT/2;               //added
-
-    //std::cout << q_x << "  ";
-  //  std::cout << q_y << std::endl;
-/*
-     std::cout << q_x + 640<< "  ";
-    std::cout << q_y + 360<< std::endl;
-    */
-    //SDL_SetRenderDrawColor(gRenderer.get(), 0xFF, 0x00, 0x00, 0xFF);
-   // filledCircleColor(gRenderer.get(), q_x + SCREEN_WIDTH/2, q_y + SCREEN_HEIGHT/2, 30, 0xFF0000FF);         //added 640, 360
-   
-  int width = 100;
+    SDL_SetRenderDrawColor(gRenderer.get(), 0xFF, 0x00, 0x00, 0xFF);
+   filledCircleColor(gRenderer.get(), q_x + SCREEN_WIDTH/2, q_y + SCREEN_HEIGHT/2, 30, 0xFF0000FF);         //added 640, 360
+  /* int width = 100;
    int height = 10;
     SDL_Rect rectangle = { q_x + SCREEN_WIDTH/2 - width/2 , q_y + SCREEN_HEIGHT/2 - height/2, width, height };  // x, y, width, height
     SDL_SetRenderDrawColor(gRenderer.get(), 0xFF, 0x00, 0xFF, 0x00);  // pink apparently
     SDL_RenderFillRect(gRenderer.get(), &rectangle);
-  
+  */
 
 
 }
