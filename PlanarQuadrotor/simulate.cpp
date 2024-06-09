@@ -15,13 +15,9 @@ Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {
     Eigen::MatrixXf K = Eigen::MatrixXf::Zero(6, 6);
     Eigen::Vector2f input = quadrotor.GravityCompInput();
 
-  //  Q.diagonal() << 10, 10, 10, 1, 10, 0.25 / 2 / M_PI;  ORIGINAL
-   //R.row(0) << 0.1, 0.05;
-    //R.row(1) << 0.05, 0.1;
-   
-    Q.diagonal() << 10, 10, 10, 10, 10, 0.25 / 2 / M_PI;
-    R.row(0) << 0.10, 0.05;
-    R.row(1) << 0.05, 0.10;
+    Q.diagonal() << 10, 10, 10, 1, 10, 0.25 / 2 / M_PI;
+    R.row(0) << 0.1, 0.05;
+    R.row(1) << 0.05, 0.1;
 
     std::tie(A, B) = quadrotor.Linearize();
     A_discrete = Eye + dt * A;
@@ -42,23 +38,22 @@ int main(int argc, char* args[])
     const int SCREEN_WIDTH = 1280;
     const int SCREEN_HEIGHT = 720;
 
-
     /**
      * TODO: Extend simulation
      * 1. Set goal state of the mouse when clicking left mouse button (transform the coordinates to the quadrotor world! see visualizer TODO list)
-     *    [x, y, 0, 0, 0, 0]
+     *    [x, y, 0, 0, 0, 0]  <------ DONE
      * 2. Update PlanarQuadrotor from simulation when goal is changed
     */
     Eigen::VectorXf initial_state = Eigen::VectorXf::Zero(6);
     PlanarQuadrotor quadrotor(initial_state);
-    PlanarQuadrotorVisualizer quadrotor_visualizer(&quadrotor);
+    PlanarQuadrotorVisualizer quadrotor_visualizer(&quadrotor); 
     /**
      * Goal pose for the quadrotor
      * [x, y, theta, x_dot, y_dot, theta_dot]
      * For implemented LQR controller, it has to be [x, y, 0, 0, 0, 0]
     */
     Eigen::VectorXf goal_state = Eigen::VectorXf::Zero(6);
-    goal_state << 0, 0, 0, 0, 0, 0;
+    goal_state << 0, 0, 0, 0, 0, 0; //begin
     quadrotor.SetGoal(goal_state);
     /* Timestep for the simulation */
     const float dt = 0.001;
@@ -80,7 +75,9 @@ int main(int argc, char* args[])
         bool quit = false;
         float delay;
         int x, y;
+        float x0, y0;
         Eigen::VectorXf state = Eigen::VectorXf::Zero(6);
+        Eigen::VectorXf goal_state = Eigen::VectorXf::Zero(6);
 
         while (!quit)
         {
@@ -91,28 +88,23 @@ int main(int argc, char* args[])
                 {
                     quit = true;
                 }
-                else if (e.type == SDL_MOUSEMOTION)
+                else if (e.type == SDL_MOUSEBUTTONDOWN)
                 {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        SDL_GetMouseState(&x, &y);
+                        std::cout << "Mouse position: (" << x << ", " << y << ")" << std::endl;
+                        x0 = x;
+                        y0 = y;
+                        x0 = (x0 - 640) / 1280;
+                        y0 = (y0 - 360) / 760;
+                        goal_state << x0, y0, 0, 0, 0, 0;
+                        quadrotor.SetGoal(goal_state);
 
-                    SDL_GetMouseState(&x, &y);
-                   // std::cout << "Mouse position: (" << x << ", " << y << ")" << std::endl;
+                    }
                 }
-               
-                else if(e.type == SDL_MOUSEBUTTONUP){                                                                                       //added
-                                                                                                                                           
-                     SDL_GetMouseState(&x, &y);                                                                                             
 
-
-                  // goal_state << 80, -100, 0, 0, 0, 0;
-                  goal_state << x, y, 0, 0, 0, 0;
-
-                  
-                     quadrotor.SetGoal(goal_state);
-
-                     std::cout << "Drone position: "<< goal_state << std::endl; // "Mouse state: " << x +SCREEN_WIDTH/2  << ' '<< y + SCREEN_HEIGHT/2 <<std::endl;
-                    
-                }
-               
+                
             }
 
             SDL_Delay((int) dt * 1000);
