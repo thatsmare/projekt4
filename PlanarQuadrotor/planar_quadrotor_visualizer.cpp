@@ -17,8 +17,8 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
 
 
     /* x, y, theta coordinates */
-    q_x = state[0];
-    q_y = state[1];
+    q_x = state[0] * 1280 + 640;
+    q_y = state[1] * 760 + 360;
     q_theta = state[2];
 
     SDL_SetRenderDrawColor(gRenderer.get(), 0x00, 0x00, 0xFF, 0xFF);
@@ -29,19 +29,19 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
     int half_hight_screen = SCREEN_HEIGHT/2;
 
     float angle_velocity = state[3];
-    q_theta *= angle_velocity * 0.5 * 0.0002; //trying to make it less spinny
+    q_theta *= angle_velocity * 0.5 ; //trying to make it less spinny
 
     // x_output = x_original*cos(theta) - y_original*sin(theta)
     // y_output = x_original*sin(theta) + y_original*cos(theta)
-    float x_1 = q_x + half_width_screen + half_length * cos(q_theta) - half_height * sin(q_theta);
-    float x_2 = q_x + half_width_screen - half_length * cos(q_theta) - half_height * sin(q_theta);
-    float x_3 = q_x + half_width_screen - half_length * cos(q_theta) + half_height * sin(q_theta);
-    float x_4 = q_x + half_width_screen + half_length * cos(q_theta) + half_height * sin(q_theta);
+    float x_1 = q_x + half_length * cos(q_theta) - half_height * sin(q_theta);
+    float x_2 = q_x - half_length * cos(q_theta) - half_height * sin(q_theta);
+    float x_3 = q_x - half_length * cos(q_theta) + half_height * sin(q_theta);
+    float x_4 = q_x + half_length * cos(q_theta) + half_height * sin(q_theta);
 
-    float y_1 = q_y + half_hight_screen + half_length * sin(q_theta) + half_height * cos(q_theta);
-    float y_2 = q_y + half_hight_screen - half_length * sin(q_theta) + half_height * cos(q_theta);
-    float y_3 = q_y + half_hight_screen - half_length * sin(q_theta) - half_height * cos(q_theta);
-    float y_4 = q_y + half_hight_screen + half_length * sin(q_theta) - half_height * cos(q_theta);
+    float y_1 = q_y + half_length * sin(q_theta) + half_height * cos(q_theta);
+    float y_2 = q_y - half_length * sin(q_theta) + half_height * cos(q_theta);
+    float y_3 = q_y - half_length * sin(q_theta) - half_height * cos(q_theta);
+    float y_4 = q_y + half_length * sin(q_theta) - half_height * cos(q_theta);
 
 
     SDL_RenderDrawLine(gRenderer.get(), x_1, y_1, x_2, y_2);
@@ -49,7 +49,7 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
     SDL_RenderDrawLine(gRenderer.get(), x_2, y_2, x_3, y_3);
     SDL_RenderDrawLine(gRenderer.get(), x_3, y_3, x_4, y_4);
 
-     filledCircleColor(gRenderer.get(), q_x + SCREEN_WIDTH/2, q_y + SCREEN_HEIGHT/2, 10, 0xFF00FF00); 
+     filledCircleColor(gRenderer.get(), q_x, q_y, 10, 0xFF00FF00); 
 
 }
 

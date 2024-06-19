@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "RelWithDebInfo/planar_quadrotor.exe"
+			"path" : "Debug/planar_quadrotor.exe"
 		},
 		{
-			"path" : "RelWithDebInfo/planar_quadrotor.pdb"
+			"path" : "Debug/planar_quadrotor.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -96,7 +96,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -std:c++17 -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd"
 				}
 			],
 			"defines" : 
@@ -122,7 +122,7 @@
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/marty/Documents/GitHub/projekt4/build/SDL/include-config-relwithdebinfo"
+					"path" : "C:/Users/marty/Documents/GitHub/projekt4/build/SDL/include-config-debug"
 				},
 				{
 					"backtrace" : 3,
@@ -159,20 +159,20 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 2,
-			"id" : "SDL2main::@e7c329919722962a2ad4"
-		},
-		{
-			"backtrace" : 3,
-			"id" : "SDL2::@e7c329919722962a2ad4"
-		},
-		{
 			"backtrace" : 3,
 			"id" : "nodesoup::@c12dc8f6f399c06ad5fb"
 		},
 		{
 			"backtrace" : 3,
 			"id" : "matplot::@900000785becdfd3715c"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "SDL2main::@e7c329919722962a2ad4"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "SDL2::@e7c329919722962a2ad4"
 		},
 		{
 			"backtrace" : 3,
@@ -188,7 +188,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -MDd",
 				"role" : "flags"
 			},
 			{
@@ -197,22 +197,22 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "SDL\\RelWithDebInfo\\SDL2main.lib",
+				"fragment" : "SDL\\Debug\\SDL2maind.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "SDL\\RelWithDebInfo\\SDL2.lib",
+				"fragment" : "SDL\\Debug\\SDL2d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "SDL2_gfx\\RelWithDebInfo\\SDL2_gfx.lib",
+				"fragment" : "SDL2_gfx\\Debug\\SDL2_gfx.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "matplotplusplus\\source\\matplot\\RelWithDebInfo\\matplot.lib",
+				"fragment" : "matplotplusplus\\source\\matplot\\Debug\\matplot.lib",
 				"role" : "libraries"
 			},
 			{
@@ -227,7 +227,7 @@
 			},
 			{
 				"backtrace" : 10,
-				"fragment" : "matplotplusplus\\source\\3rd_party\\RelWithDebInfo\\nodesoup.lib",
+				"fragment" : "matplotplusplus\\source\\3rd_party\\Debug\\nodesoup.lib",
 				"role" : "libraries"
 			},
 			{
