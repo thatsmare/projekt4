@@ -28,9 +28,7 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
     int half_width_screen = SCREEN_WIDTH/2;
     int half_hight_screen = SCREEN_HEIGHT/2;
 
-    float angle_velocity = state[3];
-    q_theta *= angle_velocity * 0.5 ; //trying to make it less spinny
-
+   // q_theta *= 5;
     // x_output = x_original*cos(theta) - y_original*sin(theta)
     // y_output = x_original*sin(theta) + y_original*cos(theta)
     float x_1 = q_x + half_length * cos(q_theta) - half_height * sin(q_theta);
@@ -43,21 +41,10 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
     float y_3 = q_y - half_length * sin(q_theta) - half_height * cos(q_theta);
     float y_4 = q_y + half_length * sin(q_theta) - half_height * cos(q_theta);
 
+    const Sint16 x_base[] = {x_1, x_2, x_3, x_4};
+    const Sint16 y_base[] = {y_1, y_2, y_3, y_4}; 
 
-    SDL_RenderDrawLine(gRenderer.get(), x_1, y_1, x_2, y_2);
-    SDL_RenderDrawLine(gRenderer.get(), x_1, y_1, x_4, y_4);
-    SDL_RenderDrawLine(gRenderer.get(), x_2, y_2, x_3, y_3);
-    SDL_RenderDrawLine(gRenderer.get(), x_3, y_3, x_4, y_4);
-
-     filledCircleColor(gRenderer.get(), q_x, q_y, 10, 0xFF00FF00); 
-
+    filledPolygonColor(gRenderer.get(), x_base, y_base, 4, 0xFFFF0000);
 }
 
      //std::cout << q_x  << " , " << q_y << std::endl;
-
- /*   filledCircleColor(gRenderer.get(), q_x + SCREEN_WIDTH/2, q_y + SCREEN_HEIGHT/2, 20, 0xFFFFFF00);         //added 640, 360
-    int width = 100;
-    int height = 10;
-    SDL_Rect rectangle = { q_x + SCREEN_WIDTH/2 - width/2 , q_y + SCREEN_HEIGHT/2 - height/2, width, height };  // x, y, width, height
-    SDL_RenderFillRect(gRenderer.get(), &rectangle);
-    */

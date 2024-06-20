@@ -1,0 +1,36 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"SDL2_gfx/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "SDL2_gfx::@2c7becf580f3cc8d05f2"
+		}
+	],
+	"id" : "ALL_BUILD::@2c7becf580f3cc8d05f2",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"paths" : 
+	{
+		"build" : "SDL2_gfx",
+		"source" : "SDL2_gfx"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}
