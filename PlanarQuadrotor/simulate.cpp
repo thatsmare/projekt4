@@ -1,9 +1,7 @@
-/**
- * SDL window creation adapted from https://github.com/isJuhn/DoublePendulum
-*/
+#include <matplot/matplot.h>
 #include "simulate.h"
 
-Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {
+Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {          //MACIERZ LQR
     /* Calculate LQR gain matrix */
     Eigen::MatrixXf Eye = Eigen::MatrixXf::Identity(6, 6);
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(6, 6);
@@ -15,9 +13,9 @@ Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {
     Eigen::MatrixXf K = Eigen::MatrixXf::Zero(6, 6);
     Eigen::Vector2f input = quadrotor.GravityCompInput();
 
-    Q.diagonal() << 10, 10, 10, 1, 10, 0.25 / 2 / M_PI;
-    R.row(0) << 0.1, 0.05;
-    R.row(1) << 0.05, 0.1;
+    Q.diagonal() << 50, 50, 50, 5, 50, 2.5 / 2 / M_PI;         //LQR TESTING
+    R.row(0) << 0.005, 0.0025;
+    R.row(1) << 0.0025, 0.005;
 
     std::tie(A, B) = quadrotor.Linearize();
     A_discrete = Eye + dt * A;
@@ -26,7 +24,7 @@ Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {
     return LQR(A_discrete, B_discrete, Q, R);
 }
 
-void control(PlanarQuadrotor &quadrotor, const Eigen::MatrixXf &K) {
+void control(PlanarQuadrotor &quadrotor, const Eigen::MatrixXf &K) {           
     Eigen::Vector2f input = quadrotor.GravityCompInput();
     quadrotor.SetInput(input - K * quadrotor.GetControlState());
 }
@@ -42,7 +40,7 @@ int main(int argc, char* args[])
      * TODO: Extend simulation
      * 1. Set goal state of the mouse when clicking left mouse button (transform the coordinates to the quadrotor world! see visualizer TODO list)
      *    [x, y, 0, 0, 0, 0]  <------ DONE
-     * 2. Update PlanarQuadrotor from simulation when goal is changed
+     * 2. Update PlanarQuadrotor from simulation when goal is changed   <------ DONE
     */
     Eigen::VectorXf initial_state = Eigen::VectorXf::Zero(6);
     PlanarQuadrotor quadrotor(initial_state);
@@ -68,14 +66,16 @@ int main(int argc, char* args[])
     std::vector<float> x_history;
     std::vector<float> y_history;
     std::vector<float> theta_history;
+    std::vector<float> time_history;
 
     if (init(gWindow, gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT) >= 0)
     {
         SDL_Event e;
         bool quit = false;
         float delay;
+        char command;
         int x, y;
-        float x0, y0;
+        float x0, y0;           //new coordinates
         Eigen::VectorXf state = Eigen::VectorXf::Zero(6);
         Eigen::VectorXf goal_state = Eigen::VectorXf::Zero(6);
 
@@ -96,15 +96,35 @@ int main(int argc, char* args[])
                         std::cout << "Mouse position: (" << x << ", " << y << ")" << std::endl;
                         x0 = x;
                         y0 = y;
-                        x0 = (x0 - 640) / 1280;
-                        y0 = (y0 - 360) / 760;
+                        x0 = (x0 - 640) / 1280  ;
+                        y0 = (y0 - 360) / 760 ;
                         goal_state << x0, y0, 0, 0, 0, 0;
                         quadrotor.SetGoal(goal_state);
-
+                        //update of history
                     }
                 }
+                else if (e.type == SDL_KEYDOWN) {
+                    if (e.key.keysym.sym == SDLK_p) {
+                        using namespace matplot;
 
-                
+                        auto fig = figure(true);
+                        fig->size(900, 600);
+
+                        subplot(3, 1, 0);
+                        plot(x_history, time_history);
+                        title("x history");
+
+                        subplot(3, 1, 1);
+                        plot(y_history, time_history);
+                        title("y history");
+
+                        subplot(3, 1, 2);
+                        plot(theta_history, time_history);
+                        title("theta history");
+
+                        show();
+                    }
+                }  
             }
 
             SDL_Delay((int) dt * 1000);
@@ -123,8 +143,10 @@ int main(int argc, char* args[])
         }
     }
     SDL_Quit();
+
     return 0;
 }
+
 
 int init(std::shared_ptr<SDL_Window>& gWindow, std::shared_ptr<SDL_Renderer>& gRenderer, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
