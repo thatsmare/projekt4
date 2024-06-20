@@ -1,3 +1,6 @@
+/**
+ * SDL window creation adapted from https://github.com/isJuhn/DoublePendulum
+*/
 #include <matplot/matplot.h>
 #include "simulate.h"
 
@@ -35,6 +38,8 @@ int main(int argc, char* args[])
     std::shared_ptr<SDL_Renderer> gRenderer = nullptr;
     const int SCREEN_WIDTH = 1280;
     const int SCREEN_HEIGHT = 720;
+    Uint32 start_time = 0;
+    start_time = SDL_GetTicks();
 
     /**
      * TODO: Extend simulation
@@ -60,8 +65,8 @@ int main(int argc, char* args[])
 
     /**
      * TODO: Plot x, y, theta over time
-     * 1. Update x, y, theta history vectors to store trajectory of the quadrotor
-     * 2. Plot trajectory using matplot++ when key 'p' is clicked
+     * 1. Update x, y, theta history vectors to store trajectory of the quadrotor <------ DONE
+     * 2. Plot trajectory using matplot++ when key 'p' is clicked  <------DONE
     */
     std::vector<float> x_history;
     std::vector<float> y_history;
@@ -73,7 +78,6 @@ int main(int argc, char* args[])
         SDL_Event e;
         bool quit = false;
         float delay;
-        char command;
         int x, y;
         float x0, y0;           //new coordinates
         Eigen::VectorXf state = Eigen::VectorXf::Zero(6);
@@ -82,6 +86,15 @@ int main(int argc, char* args[])
         while (!quit)
         {
             //events
+            //update of history - as frequent as possible to get good accuracy
+            Eigen::VectorXf state = quadrotor.GetState();
+            x_history.push_back(state(0) * 1280 + 640);
+            y_history.push_back(state(1) * 760 + 360);
+            theta_history.push_back(state(2));
+            Uint32 current_time = SDL_GetTicks();
+            float time = static_cast<float>(current_time - start_time) / 1000.0f;
+            time_history.push_back(time);
+
             while (SDL_PollEvent(&e) != 0)
             {
                 if (e.type == SDL_QUIT)
@@ -100,7 +113,6 @@ int main(int argc, char* args[])
                         y0 = (y0 - 360) / 760 ;
                         goal_state << x0, y0, 0, 0, 0, 0;
                         quadrotor.SetGoal(goal_state);
-                        //update of history
                     }
                 }
                 else if (e.type == SDL_KEYDOWN) {
@@ -111,15 +123,15 @@ int main(int argc, char* args[])
                         fig->size(900, 600);
 
                         subplot(3, 1, 0);
-                        plot(x_history, time_history);
+                        plot(time_history, x_history);
                         title("x history");
 
                         subplot(3, 1, 1);
-                        plot(y_history, time_history);
+                        plot(time_history, y_history);
                         title("y history");
 
                         subplot(3, 1, 2);
-                        plot(theta_history, time_history);
+                        plot(time_history, theta_history);
                         title("theta history");
 
                         show();
