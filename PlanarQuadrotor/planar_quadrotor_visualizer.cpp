@@ -52,30 +52,37 @@ void PlanarQuadrotorVisualizer::render(std::shared_ptr<SDL_Renderer> &gRenderer)
     //proppelers
     float p_x1 = q_x + (half_length*3/4-proppeler_radius)*cos(q_theta) -half_height*3 *sin(q_theta);
     float p_y1 = q_y + (half_length*3/4-proppeler_radius) * sin(q_theta) - half_height*3 * cos(q_theta);
-    filledCircleColor(gRenderer.get(), p_x1, p_y1,proppeler_radius,0xFFFF0000 );
+    filledCircleColor(gRenderer.get(), p_x1, p_y1,proppeler_radius,0xFF0000FF );
 
     float p_x2 = q_x + (half_length*3/4+proppeler_radius)*cos(q_theta) -half_height* 3 *sin(q_theta);
     float p_y2 = q_y + (half_length*3/4+proppeler_radius) * sin(q_theta) - half_height*3 * cos(q_theta);
-    filledCircleColor(gRenderer.get(), p_x2, p_y2,proppeler_radius,0xFFFF0000 );
+    filledCircleColor(gRenderer.get(), p_x2, p_y2,proppeler_radius,0xFF0000FF );
     
     float p_x3 = q_x - (half_length*3/4+proppeler_radius)*cos(q_theta) -half_height* 3 *sin(q_theta);
     float p_y3 = q_y - (half_length*3/4+proppeler_radius) * sin(q_theta) - half_height*3 * cos(q_theta);
-    filledCircleColor(gRenderer.get(), p_x3, p_y3,proppeler_radius,0xFFFF0000 );
+    filledCircleColor(gRenderer.get(), p_x3, p_y3,proppeler_radius,0xFF0000FF );
     
     float p_x4 = q_x - (half_length*3/4-proppeler_radius)*cos(q_theta) -half_height* 3 *sin(q_theta);
     float p_y4 = q_y - (half_length*3/4-proppeler_radius) * sin(q_theta) - half_height*3 * cos(q_theta);
-    filledCircleColor(gRenderer.get(), p_x4, p_y4,proppeler_radius,0xFFFF0000 );
+    filledCircleColor(gRenderer.get(), p_x4, p_y4,proppeler_radius,0xFF0000FF );
 
     //proppelers' base
+        //right
     float pb_x1 = q_x + half_length*3/4*cos(q_theta) - half_height*3*sin(q_theta);
     float pb_y1 = q_y + half_length*3/4*sin(q_theta) - half_height*3*cos(q_theta);
 
     float pb_x2 = q_x + half_length*3/4*cos(q_theta) - half_height*sin(q_theta);
     float pb_y2 = q_y + half_length*3/4*sin(q_theta) - half_height*cos(q_theta);
-    const Sint16 px_base_left[] = {pb_x1,pb_x2};
-    const Sint16 py_base_left[] = {pb_y1,pb_y2};
-    filledPolygonColor(gRenderer.get(), x_base, y_base, 4, 0xFFFF0000);
 
+    SDL_RenderDrawLine(gRenderer.get(), pb_x1, pb_y1, pb_x2, pb_y2);
+        //left
+    float pb_x3 = q_x - half_length*3/4*cos(q_theta) - half_height*3*sin(q_theta);
+    float pb_y3 = q_y - half_length*3/4*sin(q_theta) - half_height*3*cos(q_theta);
+
+    float pb_x4 = q_x - half_length*3/4*cos(q_theta) - half_height*sin(q_theta);
+    float pb_y4 = q_y - half_length*3/4*sin(q_theta) - half_height*cos(q_theta);
+
+    SDL_RenderDrawLine(gRenderer.get(), pb_x3, pb_y3, pb_x4, pb_y4);
 
 }
 
