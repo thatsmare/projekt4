@@ -4,7 +4,7 @@
 #include <matplot/matplot.h>
 #include "simulate.h"
 
-Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {          //MACIERZ LQR
+Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {          //MACIERZ LQR
     /* Calculate LQR gain matrix */
     Eigen::MatrixXf Eye = Eigen::MatrixXf::Identity(6, 6);
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(6, 6);
@@ -23,11 +23,11 @@ Eigen::MatrixXf LQR(PlanarQuadrotor &quadrotor, float dt) {          //MACIERZ L
     std::tie(A, B) = quadrotor.Linearize();
     A_discrete = Eye + dt * A;
     B_discrete = dt * B;
-    
+
     return LQR(A_discrete, B_discrete, Q, R);
 }
 
-void control(PlanarQuadrotor &quadrotor, const Eigen::MatrixXf &K) {           
+void control(PlanarQuadrotor& quadrotor, const Eigen::MatrixXf& K) {
     Eigen::Vector2f input = quadrotor.GravityCompInput();
     quadrotor.SetInput(input - K * quadrotor.GetControlState());
 }
@@ -49,7 +49,7 @@ int main(int argc, char* args[])
     */
     Eigen::VectorXf initial_state = Eigen::VectorXf::Zero(6);
     PlanarQuadrotor quadrotor(initial_state);
-    PlanarQuadrotorVisualizer quadrotor_visualizer(&quadrotor); 
+    PlanarQuadrotorVisualizer quadrotor_visualizer(&quadrotor);
     /**
      * Goal pose for the quadrotor
      * [x, y, theta, x_dot, y_dot, theta_dot]
@@ -109,8 +109,8 @@ int main(int argc, char* args[])
                         std::cout << "Mouse position: (" << x << ", " << y << ")" << std::endl;
                         x0 = x;
                         y0 = y;
-                        x0 = (x0 - 640) / 1280  ;
-                        y0 = (y0 - 360) / 760 ;
+                        x0 = (x0 - 640) / 1280;
+                        y0 = (y0 - 360) / 760;
                         goal_state << x0, y0, 0, 0, 0, 0;
                         quadrotor.SetGoal(goal_state);
                     }
@@ -120,26 +120,30 @@ int main(int argc, char* args[])
                         using namespace matplot;
 
                         auto fig = figure(true);
-                        fig->size(900, 600);
+                        fig->size(1600, 900);
 
                         subplot(3, 1, 0);
                         plot(time_history, x_history);
                         title("x history");
+                        ylabel("X position");
 
                         subplot(3, 1, 1);
                         plot(time_history, y_history);
                         title("y history");
+                        ylabel("Y position");
 
                         subplot(3, 1, 2);
                         plot(time_history, theta_history);
                         title("theta history");
+                        ylabel("theta");
 
                         show();
                     }
-                }  
+                    else if (e.key.keysym.sym == SDLK_q) break;            //po tej akcji nie reaguje na myszke!!!!!!
+                }
             }
 
-            SDL_Delay((int) dt * 1000);
+            SDL_Delay((int)dt * 1000);
 
             SDL_SetRenderDrawColor(gRenderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer.get());
