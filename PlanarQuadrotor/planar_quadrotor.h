@@ -18,6 +18,7 @@ public:
     PlanarQuadrotor(Eigen::VectorXf z);
     void SetGoal(Eigen::VectorXf z_goal);
     Eigen::VectorXf GetState();
+    Eigen::VectorXf Getgoal();
     Eigen::VectorXf GetControlState();
     Eigen::Vector2f GravityCompInput();
     std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> Linearize();
