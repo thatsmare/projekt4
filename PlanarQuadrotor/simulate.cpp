@@ -5,7 +5,7 @@
 #include "simulate.h"
 #include <cmath>
 
-Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {          //MACIERZ LQR
+Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {          
     /* Calculate LQR gain matrix */
     Eigen::MatrixXf Eye = Eigen::MatrixXf::Identity(6, 6);
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(6, 6);
@@ -17,11 +17,7 @@ Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {          //MACIERZ L
     Eigen::MatrixXf K = Eigen::MatrixXf::Zero(6, 6);
     Eigen::Vector2f input = quadrotor.GravityCompInput();
 
-    /*Q.diagonal() << 0.004, 0.004, 400, 0.004, 0.045, 2 / 2 / M_PI;
-    R.row(0) << 30, 7;
-    R.row(1) << 7, 30;*/
-
-    Q.diagonal() << 50, 50, 50, 5, 50, 2.5 / 2 / M_PI;         //LQR TESTING
+    Q.diagonal() << 50, 50, 50, 5, 50, 2.5 / 2 / M_PI;        
     R.row(0) << 0.005, 0.0025;
     R.row(1) << 0.0025, 0.005;
 
@@ -38,24 +34,18 @@ void control(PlanarQuadrotor& quadrotor, const Eigen::MatrixXf& K) {
 }
 
 //---------------------------------------AUDIO----------------------------------------------------------------
-void generate_sound(Uint8* stream, int len)                    
-{
-    const int amplitude = 1;  //amplituda dźwięku
-    const double sampling_frequency = 44100.0;
-    const int sine_wave_frequency = 440; // 440 Hz, standard A4 note
-    double phase = 0.0;
-    double phase_increment = 2.0 * M_PI * sine_wave_frequency / sampling_frequency;
-    int16_t* buffer = (int16_t*)stream;
-    int length = len / 2; // len is in bytes, we want number of samples
+void generate_sound(int16_t* buffer, int length) {
+    const int amplitude = 400; // Amplituda dźwięku
+    const double sampleRate = 44100.0; // Częstotliwość próbkowania
+    const double frequency = 440.0; // Częstotliwość dźwięku A4
+    int16_t* audioBuffer = (int16_t*)buffer; // Bufor jako int16_t
+    length = length / 2; // Długość bufora w próbkach (dla 16-bitowego dźwięku)
 
-        for (int i = 0; i < length; ++i) 
-        {
-            buffer[i] = (int16_t)(amplitude * sin(phase));
-            phase += phase_increment;
-            if (phase >= 2.0 * M_PI) {
-                phase -= 2.0 * M_PI;
-            }
-        }
+    for (int i = 0; i < length; ++i) {
+        double time = i / sampleRate;
+        double value = amplitude * sin(2.0 * M_PI * frequency * time);
+        audioBuffer[i] = (int16_t)value;
+    }
 }
 //---------------------------------------------------------------------------------------------
 
@@ -73,15 +63,15 @@ int main(int argc, char* args[])
      * 1. Set goal state of the mouse when clicking left mouse button (transform the coordinates to the quadrotor world! see visualizer TODO list)
      *    [x, y, 0, 0, 0, 0]  <------ DONE
      * 2. Update PlanarQuadrotor from simulation when goal is changed   <------ DONE
+     *
+     TODO: Plot x, y, theta over time
+     * 1. Update x, y, theta history vectors to store trajectory of the quadrotor <------ DONE
+     * 2. Plot trajectory using matplot++ when key 'p' is clicked  <------DONE
     */
     Eigen::VectorXf initial_state = Eigen::VectorXf::Zero(6);
     PlanarQuadrotor quadrotor(initial_state);
     PlanarQuadrotorVisualizer quadrotor_visualizer(&quadrotor);
-    /**
-     * Goal pose for the quadrotor
-     * [x, y, theta, x_dot, y_dot, theta_dot]
-     * For implemented LQR controller, it has to be [x, y, 0, 0, 0, 0]
-    */
+
     Eigen::VectorXf goal_state = Eigen::VectorXf::Zero(6);
     goal_state << 0, 0, 0, 0, 0, 0; //begin
     quadrotor.SetGoal(goal_state);
@@ -90,11 +80,6 @@ int main(int argc, char* args[])
     Eigen::MatrixXf K = LQR(quadrotor, dt);
     Eigen::Vector2f input = Eigen::Vector2f::Zero(2);
 
-    /**
-     * TODO: Plot x, y, theta over time
-     * 1. Update x, y, theta history vectors to store trajectory of the quadrotor <------ DONE
-     * 2. Plot trajectory using matplot++ when key 'p' is clicked  <------DONE
-    */
     std::vector<float> x_history;
     std::vector<float> y_history;
     std::vector<float> theta_history;
@@ -106,22 +91,21 @@ int main(int argc, char* args[])
         return -1;
     }
 
-    //audio specification config
-
     SDL_AudioSpec spec;
-    spec.freq = 44100.0;           //czestotliwosc probkowania
-    spec.format = AUDIO_U8;
-    spec.channels = 2;              //stereo - jak leci w lewo to lewy głosnik glosniej itp
-    spec.samples = 4096;
-    spec.callback = NULL;
+    spec.freq = 44100.0; // Częstotliwość próbkowania
+    spec.format = AUDIO_S16SYS; // Format dźwięku
+    spec.channels = 1; // Liczba kanałów
+    spec.samples = 40096; // Rozmiar bufora próbek - CHYBA POWINIEN BYĆ INNY ALE NIE MOŻE BYĆ ZBYT MAŁY
+    spec.callback = NULL; // Brak funkcji callback
+    spec.userdata = NULL;
 
-    SDL_AudioSpec obtained_spec;
-    SDL_AudioDeviceID audio_device = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
-    if (audio_device == 0) {
-        std::cout << "SDL Audio Error: " << SDL_GetError() << std::endl;
+    SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
+    if (deviceId == 0) {
         SDL_Quit();
         return -1;
     }
+
+    int16_t* audioBuffer = new int16_t[spec.samples];
 
     if (init(gWindow, gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT) >= 0)
     {
@@ -205,9 +189,15 @@ int main(int argc, char* args[])
             /* Simulate quadrotor forward in time */
             control(quadrotor, K);
             quadrotor.Update(dt);
+
+            SDL_ClearQueuedAudio(deviceId);                //czyszczenie bufora
+            generate_sound(audioBuffer, spec.samples * 2); // Generowanie dźwięku A4
+            SDL_QueueAudio(deviceId, audioBuffer, spec.samples * sizeof(int16_t));
+            SDL_PauseAudioDevice(deviceId, 0);
         }
     }
-    SDL_CloseAudioDevice(audio_device);
+    SDL_CloseAudioDevice(deviceId);
+    delete[] audioBuffer;
     SDL_Quit();
 
     return 0;
