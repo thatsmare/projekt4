@@ -37,7 +37,7 @@ void control(PlanarQuadrotor& quadrotor, const Eigen::MatrixXf& K) {
 void generate_sound(int16_t* buffer, int length) {
     const int amplitude = 1000; // Amplituda dźwięku
     const double sampleRate = 44100.0; // Częstotliwość próbkowania
-    const double frequency = 220.0; // Częstotliwość A4
+    const double frequency = 220.0; // Częstotliwość A3
     length = length / 2; // Długość bufora w próbkach (dla 16-bitowego dźwięku)
 
     for (int i = 0; i < length; ++i) {
@@ -94,7 +94,7 @@ int main(int argc, char* args[])
     spec.format = AUDIO_S16SYS; // Format dźwięku
     spec.channels = 1; // Liczba kanałów
     spec.samples = 32768; // Rozmiar bufora próbek
-    spec.callback = NULL; // Brak funkcji callback
+    spec.callback = NULL; 
     spec.userdata = NULL;
 
     SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
@@ -111,10 +111,12 @@ int main(int argc, char* args[])
         SDL_Event e;
         bool quit = false;
         float delay;
+        bool at_goal;
         int x, y;
         float x0, y0;           //new coordinates
         Eigen::VectorXf state = Eigen::VectorXf::Zero(6);
         Eigen::VectorXf goal_state = Eigen::VectorXf::Zero(6);
+        Eigen::VectorXf current_state = quadrotor.GetState();
         SDL_PauseAudioDevice(deviceId, 0);
 
         while (!quit)
@@ -190,8 +192,20 @@ int main(int argc, char* args[])
             control(quadrotor, K);
             quadrotor.Update(dt);
 
-            generate_sound(audioBuffer, spec.samples * sizeof(int16_t)); // Generowanie dźwięku A4
-            SDL_QueueAudio(deviceId, audioBuffer, spec.samples * sizeof(int16_t));
+            current_state = quadrotor.GetState();
+
+            at_goal = (current_state - goal_state).norm() < 0.02; // Tolerancja odległości dla uznania, że osiągnięto cel
+
+            if (!at_goal)
+            {
+                generate_sound(audioBuffer, spec.samples * sizeof(int16_t)); // Generowanie dźwięku A3
+                SDL_QueueAudio(deviceId, audioBuffer, spec.samples * sizeof(int16_t));
+                SDL_PauseAudioDevice(deviceId, 0);
+            }
+            else {
+                SDL_PauseAudioDevice(deviceId, 1); // Wstrzymanie odtwarzania dźwięku jeśli osiągnięto cel
+            }
+            current_state.setZero(); // Czyszczenie current_state
         }
     }
     SDL_CloseAudioDevice(deviceId);
