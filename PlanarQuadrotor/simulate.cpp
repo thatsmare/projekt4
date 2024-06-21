@@ -34,15 +34,24 @@ void control(PlanarQuadrotor& quadrotor, const Eigen::MatrixXf& K) {
 }
 
 //---------------------------------------AUDIO----------------------------------------------------------------
-void generate_sound(int16_t* buffer, int length) {
-    const int amplitude = 1000; // Amplituda dźwięku
+void generate_sound(int16_t* buffer, int length, float speed) {
+    const int amplitude = 700; // Amplituda dźwięku
     const double sampleRate = 44100.0; // Częstotliwość próbkowania
     const double frequency = 220.0; // Częstotliwość A3
     length = length / 2; // Długość bufora w próbkach (dla 16-bitowego dźwięku)
+    double amplitude_scaled;
 
     for (int i = 0; i < length; ++i) {
         double time = i / sampleRate;
-        double value = amplitude * sin(2.0 * M_PI * frequency * time);
+        amplitude_scaled = amplitude * (1.0 + speed);
+
+        if (amplitude_scaled > 4000) {
+            amplitude_scaled = 4000;
+        }
+        else if (amplitude_scaled < -4000) {
+            amplitude_scaled = -4000;
+        }
+        double value = amplitude_scaled * sin(2.0 * M_PI * frequency * time);
         buffer[i] = static_cast<int16_t>(value);
     }
 }
@@ -112,6 +121,7 @@ int main(int argc, char* args[])
         bool quit = false;
         float delay;
         bool at_goal;
+        float speed = 0.0;
         int x, y;
         float x0, y0;           //new coordinates
         Eigen::VectorXf state = Eigen::VectorXf::Zero(6);
@@ -192,13 +202,21 @@ int main(int argc, char* args[])
             control(quadrotor, K);
             quadrotor.Update(dt);
 
+            speed = 0.0;
+            if (time_history.size() > 1) {
+                float dx = x_history.back() - x_history[x_history.size() - 2];
+                float dy = y_history.back() - y_history[y_history.size() - 2];
+                float dt = time_history.back() - time_history[time_history.size() - 2];
+                speed = sqrt(dx * dx + dy * dy) / dt; // Prędkość liniowa jako zmiana położenia na jednostkę czasu
+            }
+
             current_state = quadrotor.GetState();
 
             at_goal = (current_state - goal_state).norm() < 0.02; // Tolerancja odległości dla uznania, że osiągnięto cel
 
             if (!at_goal)
             {
-                generate_sound(audioBuffer, spec.samples * sizeof(int16_t)); // Generowanie dźwięku A3
+                generate_sound(audioBuffer, spec.samples * sizeof(int16_t), speed); // Generowanie dźwięku A3
                 SDL_QueueAudio(deviceId, audioBuffer, spec.samples * sizeof(int16_t));
                 SDL_PauseAudioDevice(deviceId, 0);
             }
