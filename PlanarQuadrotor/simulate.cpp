@@ -5,7 +5,7 @@
 #include "simulate.h"
 #include <cmath>
 
-Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {          
+Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {
     /* Calculate LQR gain matrix */
     Eigen::MatrixXf Eye = Eigen::MatrixXf::Identity(6, 6);
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(6, 6);
@@ -17,7 +17,7 @@ Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {
     Eigen::MatrixXf K = Eigen::MatrixXf::Zero(6, 6);
     Eigen::Vector2f input = quadrotor.GravityCompInput();
 
-    Q.diagonal() << 50, 50, 50, 5, 50, 2.5 / 2 / M_PI;        
+    Q.diagonal() << 50, 50, 50, 5, 50, 2.5 / 2 / M_PI;
     R.row(0) << 0.005, 0.0025;
     R.row(1) << 0.0025, 0.005;
 
@@ -35,16 +35,15 @@ void control(PlanarQuadrotor& quadrotor, const Eigen::MatrixXf& K) {
 
 //---------------------------------------AUDIO----------------------------------------------------------------
 void generate_sound(int16_t* buffer, int length) {
-    const int amplitude = 400; // Amplituda dźwięku
+    const int amplitude = 280; // Amplituda dźwięku
     const double sampleRate = 44100.0; // Częstotliwość próbkowania
-    const double frequency = 440.0; // Częstotliwość dźwięku A4
-    int16_t* audioBuffer = (int16_t*)buffer; // Bufor jako int16_t
+    const double frequency = 220.0; // Częstotliwość A4
     length = length / 2; // Długość bufora w próbkach (dla 16-bitowego dźwięku)
 
     for (int i = 0; i < length; ++i) {
         double time = i / sampleRate;
         double value = amplitude * sin(2.0 * M_PI * frequency * time);
-        audioBuffer[i] = (int16_t)value;
+        buffer[i] = static_cast<int16_t>(value);
     }
 }
 //---------------------------------------------------------------------------------------------
@@ -85,22 +84,22 @@ int main(int argc, char* args[])
     std::vector<float> theta_history;
     std::vector<float> time_history;
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
-    {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
         return -1;
     }
 
     SDL_AudioSpec spec;
-    spec.freq = 44100.0; // Częstotliwość próbkowania
+    spec.freq = 44100; // Częstotliwość próbkowania
     spec.format = AUDIO_S16SYS; // Format dźwięku
     spec.channels = 1; // Liczba kanałów
-    spec.samples = 40096; // Rozmiar bufora próbek - CHYBA POWINIEN BYĆ INNY ALE NIE MOŻE BYĆ ZBYT MAŁY
+    spec.samples = 32768; // Rozmiar bufora próbek
     spec.callback = NULL; // Brak funkcji callback
     spec.userdata = NULL;
 
     SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
     if (deviceId == 0) {
+        std::cerr << "SDL audio device initialization failed: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return -1;
     }
@@ -116,6 +115,7 @@ int main(int argc, char* args[])
         float x0, y0;           //new coordinates
         Eigen::VectorXf state = Eigen::VectorXf::Zero(6);
         Eigen::VectorXf goal_state = Eigen::VectorXf::Zero(6);
+        SDL_PauseAudioDevice(deviceId, 0);
 
         while (!quit)
         {
@@ -190,10 +190,8 @@ int main(int argc, char* args[])
             control(quadrotor, K);
             quadrotor.Update(dt);
 
-            SDL_ClearQueuedAudio(deviceId);                //czyszczenie bufora
-            generate_sound(audioBuffer, spec.samples * 2); // Generowanie dźwięku A4
+            generate_sound(audioBuffer, spec.samples * sizeof(int16_t)); // Generowanie dźwięku A4
             SDL_QueueAudio(deviceId, audioBuffer, spec.samples * sizeof(int16_t));
-            SDL_PauseAudioDevice(deviceId, 0);
         }
     }
     SDL_CloseAudioDevice(deviceId);
