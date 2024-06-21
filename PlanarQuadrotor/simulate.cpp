@@ -45,12 +45,13 @@ void generate_sound(int16_t* buffer, int length, float speed) {
         double time = i / sampleRate;
         amplitude_scaled = amplitude * (1.0 + speed);
 
-        if (amplitude_scaled > 4000) {
+       if (amplitude_scaled > 4000) {
             amplitude_scaled = 4000;
         }
         else if (amplitude_scaled < -4000) {
             amplitude_scaled = -4000;
         }
+        
         double value = amplitude_scaled * sin(2.0 * M_PI * frequency * time);
         buffer[i] = static_cast<int16_t>(value);
     }
@@ -207,7 +208,7 @@ int main(int argc, char* args[])
                 float dx = x_history.back() - x_history[x_history.size() - 2];
                 float dy = y_history.back() - y_history[y_history.size() - 2];
                 float dt = time_history.back() - time_history[time_history.size() - 2];
-                speed = sqrt(dx * dx + dy * dy) / dt; // Prędkość liniowa jako zmiana położenia na jednostkę czasu
+                speed = sqrt(dx * dx + dy * dy)/dt/100; // Prędkość liniowa jako zmiana położenia na jednostkę czasu
             }
 
             current_state = quadrotor.GetState();
@@ -219,6 +220,7 @@ int main(int argc, char* args[])
                 generate_sound(audioBuffer, spec.samples * sizeof(int16_t), speed); // Generowanie dźwięku A3
                 SDL_QueueAudio(deviceId, audioBuffer, spec.samples * sizeof(int16_t));
                 SDL_PauseAudioDevice(deviceId, 0);
+                std::cout << speed << std::endl;
             }
             else {
                 SDL_PauseAudioDevice(deviceId, 1); // Wstrzymanie odtwarzania dźwięku jeśli osiągnięto cel
