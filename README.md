@@ -1,7 +1,7 @@
 # Projekt 4 - Techniki programowania
 
-### Martyna Penkowska 197926
-### Natalia Sampławska 197573
+Martyna Penkowska 197926
+Natalia Sampławska 197573
 
 # Zadania projektowe
 1. Uzupełnić kod zgodnie z polami TODO w plikach PlanarQuadrotor
