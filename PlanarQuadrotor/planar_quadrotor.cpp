@@ -22,6 +22,10 @@ Eigen::VectorXf PlanarQuadrotor::GetState() {
     return z;
 }
 
+Eigen::VectorXf PlanarQuadrotor::Getgoal() {
+    return z_goal;
+}
+
 Eigen::VectorXf PlanarQuadrotor::GetControlState() {
     return z - z_goal;
 }
