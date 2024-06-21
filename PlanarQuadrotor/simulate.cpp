@@ -35,7 +35,7 @@ void control(PlanarQuadrotor& quadrotor, const Eigen::MatrixXf& K) {
 
 //---------------------------------------AUDIO----------------------------------------------------------------
 void generate_sound(int16_t* buffer, int length) {
-    const int amplitude = 280; // Amplituda dźwięku
+    const int amplitude = 1000; // Amplituda dźwięku
     const double sampleRate = 44100.0; // Częstotliwość próbkowania
     const double frequency = 220.0; // Częstotliwość A4
     length = length / 2; // Długość bufora w próbkach (dla 16-bitowego dźwięku)
