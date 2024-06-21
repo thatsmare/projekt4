@@ -1,6 +1,7 @@
 # Projekt 4 - Techniki programowania
 
 Martyna Penkowska 197926
+
 Natalia Sampławska 197573
 
 # Zadania projektowe
