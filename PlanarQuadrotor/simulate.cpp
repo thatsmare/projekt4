@@ -3,6 +3,7 @@
 */
 #include <matplot/matplot.h>
 #include "simulate.h"
+#include <cmath>
 
 Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {          //MACIERZ LQR
     /* Calculate LQR gain matrix */
@@ -15,6 +16,10 @@ Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {          //MACIERZ L
     Eigen::MatrixXf R = Eigen::MatrixXf::Identity(2, 2);
     Eigen::MatrixXf K = Eigen::MatrixXf::Zero(6, 6);
     Eigen::Vector2f input = quadrotor.GravityCompInput();
+
+    /*Q.diagonal() << 0.004, 0.004, 400, 0.004, 0.045, 2 / 2 / M_PI;
+    R.row(0) << 30, 7;
+    R.row(1) << 7, 30;*/
 
     Q.diagonal() << 50, 50, 50, 5, 50, 2.5 / 2 / M_PI;         //LQR TESTING
     R.row(0) << 0.005, 0.0025;
@@ -30,6 +35,26 @@ Eigen::MatrixXf LQR(PlanarQuadrotor& quadrotor, float dt) {          //MACIERZ L
 void control(PlanarQuadrotor& quadrotor, const Eigen::MatrixXf& K) {
     Eigen::Vector2f input = quadrotor.GravityCompInput();
     quadrotor.SetInput(input - K * quadrotor.GetControlState());
+}
+
+void generate_sound(Uint8* stream, int len)
+{
+    const int amplitude = 1;  //amplituda dźwięku
+    const double sampling_frequency = 44100.0;
+    const int sine_wave_frequency = 440; // 440 Hz, standard A4 note
+    double phase = 0.0;
+    double phase_increment = 2.0 * M_PI * sine_wave_frequency / sampling_frequency;
+    int16_t* buffer = (int16_t*)stream;
+    int length = len / 2; // len is in bytes, we want number of samples
+
+        for (int i = 0; i < length; ++i) 
+        {
+            buffer[i] = (int16_t)(amplitude * sin(phase));
+            phase += phase_increment;
+            if (phase >= 2.0 * M_PI) {
+                phase -= 2.0 * M_PI;
+            }
+        }
 }
 
 int main(int argc, char* args[])
@@ -75,6 +100,29 @@ int main(int argc, char* args[])
 
     if (init(gWindow, gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT) >= 0)
     {
+        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
+        {
+            std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
+            return -1;
+        }
+
+        //audio specification config
+
+        SDL_AudioSpec spec;
+        spec.freq = 44100.0;           //czestotliwosc probkowania
+        spec.format = AUDIO_U8;
+        spec.channels = 2;              //stereo - jak leci w lewo to lewy głosnik glosniej itp
+        spec.samples = 4096;
+        spec.callback = NULL;
+
+        SDL_AudioSpec obtained_spec;
+        SDL_AudioDeviceID audio_device = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
+        if (audio_device == 0) {
+            std::cout << "SDL Audio Error: " << SDL_GetError() << std::endl;
+            SDL_Quit();
+            return -1;
+        }
+
         SDL_Event e;
         bool quit = false;
         float delay;
@@ -139,7 +187,6 @@ int main(int argc, char* args[])
 
                         show();
                     }
-                    else if (e.key.keysym.sym == SDLK_q) break;            //po tej akcji nie reaguje na myszke!!!!!!
                 }
             }
 
@@ -158,6 +205,7 @@ int main(int argc, char* args[])
             quadrotor.Update(dt);
         }
     }
+    //SDL_CloseAudioDevice(audio_device);
     SDL_Quit();
 
     return 0;
